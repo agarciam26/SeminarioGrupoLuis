@@ -1,1 +1,33 @@
 # Documentos Solo para mostrar disenio
+
+# pasos para completar el funcionamiento del prototipo del seminario
+# Python Django
+
+# CREAR MAQUINA VIRTUAL
+# virtualenv .
+
+# EJECUTAR CONSOLA 
+# source bin/activate
+
+# INSTALAR EN LA VIRTUALIZACION CREADA INSTALAR LO SIGUIENTE
+# pip install django
+# pip install django-widget-tweaks
+# pip install xhtml2pdf
+
+# CREAR PROYECTO ecommerce
+# django-admin.py startproject ecommerce
+
+# CREAR APP ecom   dentro de la carpeta ecommerce
+# django-admin startapp ecom
+
+# COPIAR LOS ARCHIVOS CLONADOS COMO CORRESPONDEN LAS CARPETAS
+
+# EJECUTAR MIGRACIONES
+# python manage.py makemigrations
+# python manage.py migrate
+# python manage.py runserver
+
+# CREAR USUARIO ADMINISTRADOR PARA INICIO DE PLATAFORMA
+# py manage.py createsuperuser
+
+
