@@ -7,8 +7,8 @@ from django.contrib.auth.decorators import login_required,user_passes_test
 from django.contrib import messages
 from django.conf import settings
 
-def Error404View(request):
-    template_name = "index.html"
+
+
 
 def home_view(request):
     products=models.Product.objects.all()
@@ -60,13 +60,32 @@ def customer_signup_view(request):
         return HttpResponseRedirect('customerlogin')
     return render(request,'ecom/customersignup.html',context=mydict)
 
+def salesman_signup_view(request):
+    userForm=forms.SalesmanUserForm()
+    salesmanForm=forms.salesmanForm()
+    mydict={'userForm':userForm,'salesmanForm':salesmanForm}
+    if request.method=='POST':
+        userForm=forms.SalesmanUserForm(request.POST)
+        salesmanForm=forms.salesmanForm(request.POST,request.FILES)
+        if userForm.is_valid() and salesmanForm.is_valid():
+            user=userForm.save()
+            user.set_password(user.password)
+            user.save()
+            salesman=salesmanForm.save(commit=False)
+            salesman.user=user
+            salesman.save()
+            my_salesman_group = Group.objects.get_or_create(name='SALESMAN')
+            my_salesman_group[0].user_set.add(user)
+        return HttpResponseRedirect('adminlogin')
+    return render(request,'ecom/salesmansignup.html',context=mydict)
+
 #-----------for checking user iscustomer
 def is_customer(user):
     return user.groups.filter(name='CUSTOMER').exists()
 
 
 
-#---------AFTER ENTERING CREDENTIALS WE CHECK WHETHER USERNAME AND PASSWORD IS OF ADMIN,CUSTOMER
+#---------DESPUES DE VERIFICAR USUARIO CON CONTRASENA 
 def afterlogin_view(request):
     if is_customer(request.user):
         return redirect('customer-home')
@@ -79,18 +98,26 @@ def afterlogin_view(request):
 @login_required(login_url='adminlogin')
 def admin_dashboard_view(request):
     # for cards on dashboard
+    sales = models.Salesman.objects.get(user_id=request.user.id)
     customercount=models.Customer.objects.all().count()
-    productcount=models.Product.objects.all().count()
-    ordercount=models.Orders.objects.all().count()
+    sales = models.Salesman.objects.get(user_id=request.user.id)
+    productcount=models.Product.objects.filter(salesman_id= sales).count()
+    products=models.Product.objects.filter(salesman_id= sales)
+
+
+    orders=models.Orders.objects.filter(salesman_id = sales)
+    ordercount=orders.all().count()
 
     # for recent order tables
-    orders=models.Orders.objects.all()
+
+    
     ordered_products=[]
     ordered_bys=[]
     for order in orders:
         ordered_product=models.Product.objects.all().filter(id=order.product.id)
         ordered_by=models.Customer.objects.all().filter(id = order.customer.id)
-        ordered_products.append(ordered_product)
+
+        ordered_products.append(ordered_product.filter(salesman_id=sales))
         ordered_bys.append(ordered_by)
 
     mydict={
@@ -100,6 +127,7 @@ def admin_dashboard_view(request):
     'data':zip(ordered_products,ordered_bys,orders),
     }
     return render(request,'ecom/admin_dashboard.html',context=mydict)
+
 
 
 # admin view customer table
@@ -139,7 +167,8 @@ def update_customer_view(request,pk):
 # admin view the product
 @login_required(login_url='adminlogin')
 def admin_products_view(request):
-    products=models.Product.objects.all()
+    sales = models.Salesman.objects.get(user_id=request.user.id)
+    products=models.Product.objects.filter(salesman_id= sales)
     return render(request,'ecom/admin_products.html',{'products':products})
 
 
@@ -148,9 +177,12 @@ def admin_products_view(request):
 def admin_add_product_view(request):
     productForm=forms.ProductForm()
     if request.method=='POST':
-        productForm=forms.ProductForm(request.POST, request.FILES)
+        productForm=forms.ProductForm(request.POST, request.FILES) 
         if productForm.is_valid():
-            productForm.save()
+            pro=productForm.save(commit=False)
+            sales = models.Salesman.objects.get(user_id=request.user.id)
+            pro.salesman_id = sales.id
+            pro.save()
         return HttpResponseRedirect('admin-products')
     return render(request,'ecom/admin_add_products.html',{'productForm':productForm})
 
@@ -176,13 +208,20 @@ def update_product_view(request,pk):
 
 @login_required(login_url='adminlogin')
 def admin_view_booking_view(request):
-    orders=models.Orders.objects.all()
+    
+    sales = models.Salesman.objects.get(user_id=request.user.id)
+    products=models.Product.objects.filter(salesman_id= sales)
+
     ordered_products=[]
     ordered_bys=[]
+
+    orders=models.Orders.objects.filter(salesman_id = sales)
     for order in orders:
-        ordered_product=models.Product.objects.all().filter(id=order.product.id)
-        ordered_by=models.Customer.objects.all().filter(id = order.customer.id)
-        ordered_products.append(ordered_product)
+        ordered_product=models.Product.objects.filter(id=order.product.id)
+
+        ordered_by=models.Customer.objects.filter(id = order.customer.id)
+
+        ordered_products.append(ordered_product.filter(salesman_id = sales))
         ordered_bys.append(ordered_by)
     return render(request,'ecom/admin_view_booking.html',{'data':zip(ordered_products,ordered_bys,orders)})
 
@@ -197,10 +236,14 @@ def delete_order_view(request,pk):
 @login_required(login_url='adminlogin')
 def update_order_view(request,pk):
     order=models.Orders.objects.get(id=pk)
+    sales = models.Salesman.objects.get(user_id=request.user.id)
     orderForm=forms.OrderForm(instance=order)
     if request.method=='POST':
         orderForm=forms.OrderForm(request.POST,instance=order)
         if orderForm.is_valid():
+            pro=orderForm.save(commit=False)
+            sales = models.Salesman.objects.get(user_id=request.user.id)
+            pro.salesman_id = sales.id
             orderForm.save()
             return redirect('admin-view-booking')
     return render(request,'ecom/update_order.html',{'orderForm':orderForm})
@@ -248,7 +291,7 @@ def add_to_cart_view(request,pk):
     else:
         product_count_in_cart=1
 
-    response = render(request, 'ecom/index.html',{'products':products,'product_count_in_cart':product_count_in_cart})
+    response = render(request, 'ecom/portafolios.html',{'products':products,'product_count_in_cart':product_count_in_cart})
 
     #adding product id to cookies
     if 'product_ids' in request.COOKIES:
@@ -436,7 +479,10 @@ def payment_success_view(request):
     # suppose if we have 5 items in cart and we place order....so 5 rows will be created in orders table
     # there will be lot of redundant data in orders table...but its become more complicated if we normalize it
     for product in products:
-        models.Orders.objects.get_or_create(customer=customer,product=product,status='Pending',email=email,mobile=mobile,address=address)
+        print(product.salesman_id)
+        sales = models.Salesman.objects.get(id=product.salesman_id)
+        
+        models.Orders.objects.get_or_create(customer=customer,product=product,salesman=sales,status='Pending',email=email,mobile=mobile,address=address)
 
     # after order placed cookies should be deleted
     response = render(request,'ecom/payment_success.html')
@@ -553,3 +599,46 @@ def contactus_view(request):
             send_mail(str(name)+' || '+str(email),message, settings.EMAIL_HOST_USER, settings.EMAIL_RECEIVING_USER, fail_silently = False)
             return render(request, 'ecom/contactussuccess.html')
     return render(request, 'ecom/contactus.html', {'form':sub})
+
+
+
+from django.shortcuts import render
+from django.http import  HttpResponseServerError
+from django.views.generic import (
+    View,
+    TemplateView,
+    ListView,
+    DetailView
+)
+
+class HomeView(TemplateView):
+    template_name = "ecom/index.html"
+
+
+class VistaEmjemplo(TemplateView):
+    template_name = "ecom/index.html"
+    
+    
+    def get_context_data(self, **kwargs):
+        context = super(VistaEmjemplo, self).get_context_data(**kwargs)
+        a = 'prueba'
+        print(a/10)
+        return context
+
+
+class Error404View(TemplateView):
+    template_name = "ecom/error_404.html"
+
+
+class Error505View(TemplateView):
+    template_name = "ecom/error_500.html"
+
+    @classmethod
+    def as_error_view(cls):
+
+        v = cls.as_view()
+        def view(request):
+            r = v(request)
+            r.render()
+            return r
+        return view

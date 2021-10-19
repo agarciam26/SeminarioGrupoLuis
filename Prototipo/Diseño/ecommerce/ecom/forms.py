@@ -3,6 +3,14 @@ from django.contrib.auth.models import User
 from . import models
 
 
+class SalesmanUserForm(forms.ModelForm):
+    class Meta:
+        model=User
+        fields=['first_name','last_name','username','password']
+        widgets = {
+        'password': forms.PasswordInput()
+        }
+
 class CustomerUserForm(forms.ModelForm):
     class Meta:
         model=User
@@ -10,6 +18,11 @@ class CustomerUserForm(forms.ModelForm):
         widgets = {
         'password': forms.PasswordInput()
         }
+
+class salesmanForm(forms.ModelForm):
+    class Meta:
+        model=models.Salesman
+        fields=['address','mobile','profile_pic']
         
 class CustomerForm(forms.ModelForm):
     class Meta:
