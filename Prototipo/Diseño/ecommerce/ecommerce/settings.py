@@ -27,9 +27,9 @@ TEMPLATE_DIR = os.path.join(BASE_DIR,'templates')
 SECRET_KEY = 'django-insecure-r(^kfuoz#*hoh_expq6ik3_4(su&y13533!zv2@ohg5w9g!a0$'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -109,7 +109,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'es-GT'
 
 TIME_ZONE = 'UTC'
 
@@ -125,11 +125,13 @@ USE_TZ = True
 
 
 STATICFILES_DIRS = (os.path.join(BASE_DIR,'static'),)
-
+MEDIA_URL  = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
 
 LOGIN_REDIRECT_URL='/afterlogin'
 

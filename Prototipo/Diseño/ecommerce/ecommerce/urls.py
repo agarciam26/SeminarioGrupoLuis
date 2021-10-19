@@ -17,8 +17,21 @@ from django.contrib import admin
 from django.urls import path
 from ecom import views
 from django.contrib.auth.views import LoginView,LogoutView
-from django.conf.urls import handler404
 
+from django.conf import settings
+from django.conf.urls.static import static
+
+
+from django.urls import path, include
+#
+from django.conf.urls import handler404, handler500
+#
+from ecom.views import Error404View, Error505View
+
+
+handler404 = Error404View.as_view()
+
+handler500 = Error505View.as_error_view()
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -33,6 +46,7 @@ urlpatterns = [
     path('view-feedback', views.view_feedback_view,name='view-feedback'),
 
     path('adminclick', views.adminclick_view),
+    path('salesmansignup', views.salesman_signup_view),
     path('adminlogin', LoginView.as_view(template_name='ecom/adminlogin.html'),name='adminlogin'),
     path('admin-dashboard', views.admin_dashboard_view,name='admin-dashboard'),
 
@@ -59,11 +73,17 @@ urlpatterns = [
     path('download-invoice/<int:orderID>/<int:productID>', views.download_invoice_view,name='download-invoice'),
 
 
-     path('add-to-cart/<int:pk>', views.add_to_cart_view,name='add-to-cart'),
+    path('add-to-cart/<int:pk>', views.add_to_cart_view,name='add-to-cart'),
     path('cart', views.cart_view,name='cart'),
     path('remove-from-cart/<int:pk>', views.remove_from_cart_view,name='remove-from-cart'),
     path('customer-address', views.customer_address_view,name='customer-address'),
     path('payment-success', views.payment_success_view,name='payment-success'),
 
-
 ]
+
+
+
+if settings.DEBUG:
+        urlpatterns += static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
+
+
