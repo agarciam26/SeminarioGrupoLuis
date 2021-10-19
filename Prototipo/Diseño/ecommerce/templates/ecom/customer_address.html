@@ -4,6 +4,9 @@
 {% block content %}
 
   <style type="text/css">
+  label {
+  	color:  white;
+  }
 .form-style-1 {
 	margin:10px auto;
 	max-width: 400px;
@@ -93,22 +96,22 @@ select{
   {% csrf_token %}
 <ul class="form-style-1">
     <li>
-        <label>Email <span class="required">*</span></label>
+        <label>Correo <span class="required">*</span></label>
         {% render_field addressForm.Email class="field-long" placeholder="Email" %}
 
     </li>
     <li>
-        <label>Mobile <span class="required">*</span></label>
+        <label>Telefono <span class="required">*</span></label>
         {% render_field addressForm.Mobile class="field-long" placeholder="Mobile" %}
     </li>
 
     <li>
-        <label>Shipment Address <span class="required">*</span></label>
-        {% render_field addressForm.Address id="field5" class="field-long field-textarea" placeholder="Building Number,city, pin" %}
+        <label>Direccion de entrega <span class="required">*</span></label>
+        {% render_field addressForm.Address id="field5" class="field-long field-textarea" placeholder="Ingresar direccion completa para la entrega" %}
 
     </li>
     <li>
-        <input type="submit" value="Proceed To Pay" />
+        <input type="submit" value="Pagar" />
     </li>
 </ul>
 </form>

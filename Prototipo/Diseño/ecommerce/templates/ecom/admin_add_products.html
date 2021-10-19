@@ -74,7 +74,9 @@
               {% render_field productForm.product_image class="form-control" placeholder="product_image" %}
             </div>
 
-
+            <div class="form-group">
+              <h2>Encargado: {{request.user}}</h2>
+            </div>
           </div>
         </div>
         <button type="submit" class="btnSubmit">ADD</button>
@@ -82,10 +84,6 @@
     </div>
   </div>
 </form>
-<!--
-developed By : sumit kumar
-facebook : fb.com/sumit.luv
-youtube : youtube.com/lazycoders
--->
+
 
 {% endblock content %}

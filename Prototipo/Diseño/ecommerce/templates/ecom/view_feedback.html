@@ -35,13 +35,9 @@
   <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 
 </head>
-<!--
-written By : sumit kumar
-facebook : fb.com/sumit.luv
--->
 
 <br><br><br><br>
-<h2 style="text-align:center; color:blue;">Feedbacks By User</h2>
+<h2 style="text-align:center; color:blue;">Informacion adicional</h2>
 <hr>
 {%for f in feedbacks%}
 <div class="alert">
@@ -49,9 +45,5 @@ facebook : fb.com/sumit.luv
   <strong>{{f.date}} ||By : {{f.name}} </strong><br> {{f.feedback}}
 </div>
 {%endfor%}
-<!--
-developed By : sumit kumar
-facebook : fb.com/sumit.luv
-youtube : youtube.com/lazycoders
--->
+
 {% endblock content %}

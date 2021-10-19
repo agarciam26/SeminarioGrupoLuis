@@ -321,7 +321,7 @@ body {
           <div class="row">
             <div class="el-wrapper">
               <div class="box-up">
-                <img class="img" src="{% static p.product_image.url %}" alt="product pic" height="300px" width="300px">
+                <img class="img" src="{{ p.product_image.url }}" alt="product pic" height="300px" width="300px">
                 <div class="img-info">
                   <div class="info-inner">
                     <span style="background-color:#08050a; color:yellow;"class="p-company">{{p.name}}</span>
@@ -339,7 +339,7 @@ body {
                 <a class="cart" href="{% url 'add-to-cart' p.id  %}">
                   <span class="price">₹ {{p.price}}</span>
                   <span class="add-to-cart">
-                    <span class="txt">Add in cart</span>
+                    <span class="txt">Agregar</span>
                   </span>
                 </a>
               </div>
@@ -358,7 +358,7 @@ body {
 {% endif %}
   {% endfor %}
 </div>
-<!-- products data enddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd -->
+
 {%else%}
 <h3 style="text-align:center; color:yellow;">No Search Found</h3>
 {%endif%}
@@ -373,11 +373,5 @@ body {
 <br><br><br>
 <br><br><br><br><br><br><br><br><br><br><br><br>
 
-
-<!--
-developed By : sumit kumar
-facebook : fb.com/sumit.luv
-youtube : youtube.com/lazycoders
--->
 
 {% endblock content %}

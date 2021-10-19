@@ -1,26 +1,117 @@
 {% extends 'ecom/admin_base.html' %}
 {% load static %}
+
 {% block content %}
+
+
+
+<div class="container">
 <br>
 {%include 'ecom/admin_dashboard_cards.html'%}
 <br><br><br><br><br>
+</div>
+<div class="container">
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
 
+<figure class="highcharts-figure">
+  <div id="container"></div>
+  <p class="highcharts-description">
+    Proyeccion de ventas
+  </p>
+</figure>
+<script type="text/javascript">
+  Highcharts.chart('container', {
+  chart: {
+    type: 'bar'
+  },
+  title: {
+    text: 'Historico de ordenes solicitadas y cumplidas por producto'
+  },
+  subtitle: {
+    text: ''
+  },
+  xAxis: {
+    categories: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+    title: {
+      text: null
+    }
+  },
+  yAxis: {
+    min: 0,
+    title: {
+      text: 'Ventas (miles)',
+      align: 'high'
+    },
+    labels: {
+      overflow: 'justify'
+    }
+  },
+  tooltip: {
+    valueSuffix: ' thousands'
+  },
+  plotOptions: {
+    bar: {
+      dataLabels: {
+        enabled: true
+      }
+    }
+  },
+  legend: {
+    layout: 'vertical',
+    align: 'right',
+    verticalAlign: 'top',
+    x: -40,
+    y: 80,
+    floating: true,
+    borderWidth: 1,
+    backgroundColor:
+      Highcharts.defaultOptions.legend.backgroundColor || '#FFFFFF',
+    shadow: true
+  },
+  credits: {
+    enabled: false
+  },
+  series: [{
+    name: 'Producto ',
+    data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  },{
+    name: 'Producto ',
+    data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  }, {
+    name: 'Producto ',
+    data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  }, {
+    name: 'Producto ',
+    data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  }, {
+    name: 'Producto ',
+    data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  }]
+});
+</script>
+
+  
+
+</div>
 <hr><hr>
 <div class="container" >
 
     <div class="panel panel-primary" >
       <div class="panel-heading" style="text-align:center;">
-        <h6 class="panel-title">Recent Booking</h6>
+        <h6 class="panel-title">Ordenes Recientes</h6>
       </div>
       <table class="table table-hover" id="dev-table">
         <thead>
           <tr>
-            <th>Customer Name</th>
-            <th>Customer Mobile</th>
-            <th>Shipment Address</th>
-            <th>Product Name</th>
-            <th>Product Picture</th>
-            <th>Status</th>
+            <th>Nombre Cliente</th>
+            <th>Numero telefonico</th>
+            <th>Direccion de envio</th>
+            <th>Nombre del producto</th>
+            <th>Imagen Producto</th>
+            <th>Estatus</th>
 
           </tr>
         </thead>
@@ -50,13 +141,12 @@
         {% endfor %}
 
 
-
-
-
       </table>
+
 
   </div>
 </div>
+
 
 
 {% endblock content %}

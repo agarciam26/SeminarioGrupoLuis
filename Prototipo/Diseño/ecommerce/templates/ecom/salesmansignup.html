@@ -3,7 +3,11 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <title>Acceso</title>
+    <title></title>
+
+
+
+
     <style media="screen">
       body {
     margin: 0;
@@ -142,23 +146,25 @@ a.socialIcon:hover,
     </style>
   </head>
   <body>
-   {% include "ecom/navbar.html" %}
+    {% include "ecom/navbar.html" %}
     <div class="container">
     <div class="row">
         <div class="col-md-6">
             <div class="card">
-                <form class="box" method="post">
+                <form class="box" method="post" enctype="multipart/form-data">
                   {% csrf_token %}
-                    <h1>Ingreso de Cliente</h1>
-                    <p class="text-muted">Por vaor ingresa tu usuario y contrase&nacute;a</p>
-                               {% render_field form.username class="form-control" placeholder="Username" %}
-                               {% render_field form.password class="form-control" placeholder="Password" %}
-                     <input type="submit" name="" value="Login" >
-                    <ul class="largenav pull-right">
-                      <li class="upper-links dropdown"><a class="links" href="/customersignup">Crear Cuenta</a>
-                      </li>
-                        </li>
-                    </ul>
+                    <h1>CUENTA DE VENDEDOR</h1>
+                    <p class="text-muted"> Please enter your details to create account !</p>
+                      {% render_field userForm.first_name class="form-control" placeholder="First Name" %}
+                        {% render_field userForm.last_name class="form-control" placeholder="Last Name" %}
+                          {% render_field userForm.username class="form-control" placeholder="Username" %}
+                            {% render_field userForm.password class="form-control" placeholder="Password" %}
+                              {% render_field salesmanForm.address class="form-control" placeholder="Address" %}
+                                {% render_field salesmanForm.mobile class="form-control" placeholder="Mobile" %}
+                                  {% render_field salesmanForm.profile_pic class="form-control" placeholder="Profile pic" %}
+                  
+                     <input type="submit" name="" value="Create">
+
                 </form>
             </div>
         </div>
@@ -167,6 +173,8 @@ a.socialIcon:hover,
 <br><br><br><br><br><br><br><br><br>
 <br><br><br><br><br><br><br><br><br>
 <br><br><br><br><br><br><br><br><br>
+<br><br><br><br><br><br><br><br><br>
+<br><br><br><br><br>
 {% include "ecom/footer.html" %}
   </body>
 </html>
